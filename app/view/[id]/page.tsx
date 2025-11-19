@@ -1,49 +1,75 @@
 // app/view/[id]/page.tsx
 
+// Server Component (データをフェッチするため)
+
 import styles from '../../page.module.css'; // 共通のCSSを使用
 import Link from 'next/link';
-// import { getRecordById, deleteRecord } from '@/app/server-actions'; // データの取得・削除アクション
 
-// StarRatingComponentを再利用（ここではスタティック表示用として簡略化）
+// ------------------- Helper Components -------------------
+
+// 評価 (星) 表示コンポーネント
 const StarRating = ({ rating }: { rating: number }) => (
-    <div className={styles.starRating}>
+    <div className={styles.starRating} style={{ display: 'flex' }}>
         {Array.from({ length: 5 }).map((_, i) => (
-            <span key={i} style={{ color: i < rating ? 'gold' : 'lightgray', fontSize: '24px' }}>★</span>
+            <span 
+                key={i} 
+                // CSSモジュール内の styles.star を再利用する代わりに、インラインで色を指定
+                style={{ 
+                    color: i < rating ? 'gold' : 'lightgray', 
+                    fontSize: '30px', 
+                    marginRight: '2px' 
+                }}
+            >
+                ★
+            </span>
         ))}
     </div>
 );
 
-// ----------------------------------------------------------------------
+// ------------------- Mock Data Fetching (実際はServer Action/Supabase) -------------------
 
-// ページのコンポーネント定義
-// Next.jsの動的ルーティングでは、paramsオブジェクトを通じてIDを受け取ります。
+// 実際のデータ取得をシミュレート
+async function getRecordById(id: string) {
+    // 【TODO: Supabase実装】
+    // const { data } = await supabase.from('restaurant_records').select('*').eq('id', id).single();
+    // return data;
+
+    // モックデータ
+    if (id === '1') {
+        return {
+            id: '1',
+            title: '鰻重',
+            restaurant_name: 'うなぎ屋恵比寿',
+            visit_date: '2025年11月2日',
+            visit_count: 1,
+            // 実際の画像URLを設定してください
+            image_url: 'https://images.unsplash.com/photo-1549488344-932c02c462f8?fit=crop&w=600&h=400&q=80', 
+            tags: ['和食', 'うなぎ'],
+            rating: 3,
+            memo: 'とても美味しかった\n店は少し汚かった',
+            location: '東京都渋谷区恵比寿', // Googleマップ用
+        };
+    }
+    return null; 
+}
+
+// ------------------- Main Component -------------------
+
 export default async function ViewRecordPage({ params }: { params: { id: string } }) {
     const recordId = params.id;
-    
-    // 【重要】ここでSupabaseからIDに基づいてデータを取得するロジックが入ります
-    // const record = await getRecordById(recordId); 
-    
-    // 例としてモックデータを使用
-    const mockRecord = {
-        id: recordId,
-        title: '鰻重',
-        restaurant_name: 'うなぎ屋恵比寿',
-        visit_date: '2025年11月2日',
-        visit_count: 1,
-        image_url: '/eel_mock.jpg', // 実際の画像URLに置き換えてください
-        tags: ['和食', 'うなぎ'],
-        rating: 3,
-        memo: 'とても美味しかった\n店は少し汚かった',
-        location: '恵比寿駅近く',
-    };
-    const record = mockRecord; // 実際のデータ取得に置き換える
+    const record = await getRecordById(recordId); 
 
     if (!record) {
-        return <div className={styles.container}>記録が見つかりませんでした。</div>;
+        return <div className={styles.container}>記録が見つかりませんでした。 (ID: {recordId})</div>;
     }
+
+    // Googleマップ検索用のURL（場所名で検索）
+    const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(record.location)}`;
+    const editUrl = `/register?id=${record.id}`; // 編集画面（S-02）へのリンク
 
     return (
         <div className={styles.container}>
+            
             {/* 1. ヘッダー（戻るボタンとタイトル） */}
             <header className={styles.detailHeader}>
                 <Link href="/home" className={styles.backButton}>
@@ -54,13 +80,18 @@ export default async function ViewRecordPage({ params }: { params: { id: string 
 
             {/* 2. 画像 */}
             <div className={styles.imageContainer}>
-                {/* 実際は Next/Image コンポーネントを使用し、画像のURLを設定 */}
-                {/* <Image src={record.image_url} alt={record.title} width={600} height={400} className={styles.mainImage} /> */}
-                <img src={record.image_url} alt={record.title} className={styles.mainImage} /> 
+                <img 
+                    src={record.image_url} 
+                    alt={record.title} 
+                    className={styles.mainImage} 
+                    // Next/Image を使うと最適化されますが、ここでは標準のimgタグを使用
+                /> 
             </div>
 
             {/* 3. 詳細情報セクション */}
             <main className={styles.detailContent}>
+                
+                {/* タイトルとメタデータ */}
                 <h2 className={styles.recordTitle}>{record.title}</h2>
                 <p className={styles.recordMeta}>
                     📍 {record.restaurant_name}
@@ -99,27 +130,30 @@ export default async function ViewRecordPage({ params }: { params: { id: string 
                 <div className={styles.detailSection}>
                     <h3 className={styles.sectionHeader}>場所</h3>
                     <div className={styles.mapArea}>
-                         <p className={styles.locationText}>📍 {record.location}</p>
-                         <button className={styles.mapButton}>
+                        <p className={styles.locationText}>📍 {record.location}</p>
+                        <a href={googleMapsUrl} target="_blank" rel="noopener noreferrer" className={styles.mapButtonLink}>
                             🗺️ Googleマップを開く
-                        </button>
+                        </a>
                     </div>
                 </div>
             </main>
 
             {/* 8. フッターボタン（編集・削除） */}
             <footer className={styles.footerButtons}>
+                
                 {/* 編集ボタン: 食事登録画面 S-02へ遷移 */}
-                <Link href={`/register?id=${record.id}`} className={styles.editButton}>
+                <Link href={editUrl} className={styles.editButton}>
                     ✏️ 編集
                 </Link>
                 
-                {/* 削除ボタン: Server Actionを実行し、ホーム S-01へ遷移 */}
-                <form action={async () => { 
-                    // 実際はここで削除 Server Actionを実行
+                {/* 削除ボタン: Server Actionを実行 */}
+                <form action={async () => {
+                    'use server';
+                    // 【TODO: 削除 Server Action実装】
                     // await deleteRecord(record.id); 
                     // redirect('/home');
-                    alert('この記録を削除します。');
+                    console.log(`記録ID ${record.id} を削除`);
+                    // alert('この記録を削除します。'); // Server Actionではアラートは使えません
                 }} className={styles.deleteForm}>
                     <button type="submit" className={styles.deleteButton}>
                         🗑️ 削除
