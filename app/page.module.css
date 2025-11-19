@@ -1,66 +1,193 @@
+/*
+ * ページ全体とコンテナ
+ */
 .container {
-  max-width: 720px;
-  margin: 40px auto;
-  padding: 24px;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  background: #fff;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 0 15px;
+    background-color: #fff;
+    min-height: 100vh;
 }
 
-.title {
-  font-size: 24px;
-  font-weight: 700;
-  margin-bottom: 16px;
+/*
+ * 1. ヘッダー（ごちノート）
+ */
+.header {
+    padding: 20px 0 10px;
+    text-align: left;
+}
+.header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #333;
+    margin: 0;
+}
+.header p {
+    font-size: 14px;
+    color: #666;
+    margin-top: 2px;
 }
 
-.form {
-  display: grid;
-  gap: 12px;
+/*
+ * 2. 検索バー
+ */
+.searchBar {
+    position: relative;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+}
+.searchInput {
+    width: 100%;
+    padding: 10px 10px 10px 40px; /* アイコン分のスペースを確保 */
+    border: 1px solid #ccc;
+    border-radius: 25px; /* 丸みをつける */
+    font-size: 16px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+.searchIcon {
+    position: absolute;
+    left: 15px;
+    font-size: 18px;
+    color: #999;
 }
 
-.label {
-  font-size: 14px;
-  color: #374151;
-  margin-bottom: 4px;
+/*
+ * 3. タブフィルター
+ */
+.filterSection {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    /* スクロールバーで隠れないよう、padding-rightでスペースを確保 */
+}
+.filterIcon {
+    font-size: 20px;
+    color: #555;
+    margin-right: 15px;
+    transform: rotate(90deg); /* フィルターアイコンを横向きに */
 }
 
-.input, .textarea {
-  width: 100%;
-  font-size: 16px;
-  padding: 10px 12px;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  outline: none;
+.tabContainer {
+    display: flex;
+    overflow-x: scroll; /* 横スクロールを可能にする */
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch; /* スムーズなスクロール */
+    /* スクロールバーを隠す (任意) */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+.tabContainer::-webkit-scrollbar {
+    display: none;
 }
 
-.textarea {
-  min-height: 120px;
-  resize: vertical;
+.tabButton {
+    /* タブの基本的なスタイル */
+    padding: 8px 15px;
+    margin-right: 8px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    background-color: #f0f0f0;
+    color: #555;
+    font-size: 14px;
+    cursor: pointer;
+    flex-shrink: 0; /* スクロール時に縮まないようにする */
+}
+.tabButton.active {
+    /* 「すべて」などアクティブなタブのスタイル */
+    background-color: #007bff; /* 青色 */
+    color: white;
+    border-color: #007bff;
 }
 
-.button {
-  margin-top: 8px;
-  padding: 10px 14px;
-  background: #111827;
-  color: #fff;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
+/*
+ * 4. 記録カードのリスト
+ */
+.recordList {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding-bottom: 100px; /* 固定フッターとの重複を防ぐ */
 }
 
-.button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+.recordCard {
+    /* 記録カードの親要素 */
+    display: block; /* Link要素をブロック要素にする */
+    border: 1px solid #eee;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-decoration: none; /* リンクの下線を消す */
+    color: inherit;
+    overflow: hidden;
 }
 
-.resultOk {
-  margin-top: 12px;
-  color: #047857;
-  font-weight: 600;
+.cardContent {
+    padding: 15px;
 }
 
-.resultErr {
-  margin-top: 12px;
-  color: #b91c1c;
-  font-weight: 600;
+.cardTitle {
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 0;
+    margin-bottom: 8px;
+}
+
+.tagChipsArea {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 10px;
+}
+
+.tagChip {
+    background-color: #f0f0f0;
+    color: #555;
+    padding: 4px 10px;
+    border-radius: 15px;
+    font-size: 12px;
+}
+
+.starRating {
+    /* 星の評価のスタイル */
+    font-size: 20px;
+    margin-bottom: 8px;
+}
+
+.cardMemo {
+    /* 一口メモのスタイル */
+    font-size: 14px;
+    color: #444;
+    margin: 0;
+    white-space: pre-wrap; /* 改行を反映させる */
+}
+
+
+/*
+ * 5. 新規登録ボタン (フッター固定)
+ */
+.registerButton {
+    /* ボタンを画面下に固定する設定 */
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    
+    /* デザイン */
+    background-color: #ff5722; /* オレンジ色 */
+    color: white;
+    padding: 12px 30px;
+    border-radius: 30px;
+    font-size: 18px;
+    font-weight: bold;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 4px 8px rgba(255, 87, 34, 0.4);
+    z-index: 1000; /* 他の要素の上に表示 */
+}
+
+.plusIcon {
+    font-size: 24px;
+    margin-right: 8px;
 }
