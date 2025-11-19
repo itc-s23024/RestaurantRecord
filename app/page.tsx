@@ -1,6 +1,6 @@
 // app/page.tsx
 
-'use client'; // 👈 クライアントコンポーネント化
+'use client'; // ← クライアントコンポーネント化
 
 import { useState, useMemo } from 'react';
 import styles from './page.module.css';

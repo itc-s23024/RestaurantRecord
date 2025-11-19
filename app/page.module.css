@@ -191,3 +191,40 @@
     font-size: 24px;
     margin-right: 8px;
 }
+
+/* 戻るボタンのスタイル */
+.backButton {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #333; /* 黒っぽい色 */
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px 0;
+    margin-bottom: 20px;
+    
+    /* 戻る矢印のスタイル */
+}
+.backButton::before {
+    content: '←';
+    font-size: 20px;
+    margin-right: 10px;
+}
+
+/* ヘッダーのタイトルを新規登録に修正 */
+.header {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 30px;
+    padding-bottom: 10px;
+    text-align: left; /* 新規登録画面では左寄せ */
+}
+
+/* 登録ボタンのスタイル (新規登録の赤色に調整) */
+.button {
+    /* ... (他の設定は前回のまま) ... */
+    background-color: #ff0000; /* 赤色 */
+}
+.button:hover {
+    background-color: #cc0000;
+}
