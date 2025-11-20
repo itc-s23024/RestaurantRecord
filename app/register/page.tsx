@@ -57,7 +57,7 @@ export default function RegisterPage() {
         <div className={styles.container}>
             {/* 戻るボタン (ホーム画面 S-01 へ戻る) */}
             <Link href="/" className={styles.backButton}>
-                &#8592; 新規登録
+                 新規登録
             </Link>
 
             <h1 className={styles.header}>新規登録</h1>
