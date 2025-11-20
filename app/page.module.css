@@ -192,42 +192,82 @@
     margin-right: 8px;
 }
 
-/* 戻るボタンのスタイル */
+
+/* ------------------------------------------- */
+/* 新規登録画面 S-02 専用スタイル */
+/* ------------------------------------------- */
+
+/* 新規登録ヘッダー */
+.registerHeader {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    text-align: left;
+}
+
+/* 戻るボタンの修正 (前回のものを再利用) */
 .backButton {
     display: flex;
     align-items: center;
     text-decoration: none;
-    color: #333; /* 黒っぽい色 */
+    color: #333;
     font-size: 16px;
     font-weight: bold;
     padding: 10px 0;
-    margin-bottom: 20px;
-    
-    /* 戻る矢印のスタイル */
+    margin-bottom: 5px;
 }
-.backButton::before {
-    content: '←';
-    font-size: 20px;
-    margin-right: 10px;
-}
+/* 矢印はJSX側で記述したため、ここでは::beforeは不要（もしあれば削除） */
 
-/* ヘッダーのタイトルを新規登録に修正 */
-.header {
-    font-size: 24px;
+
+/* フォーム全体（styles.form）やグループ（styles.formGroup）は共通CSSをそのまま利用 */
+
+/* フォームのラベル */
+.label {
+    display: block;
     font-weight: bold;
-    margin-bottom: 30px;
-    padding-bottom: 10px;
-    text-align: left; /* 新規登録画面では左寄せ */
+    margin-bottom: 5px;
+    color: #333;
 }
 
-/* 登録ボタンのスタイル (新規登録の赤色に調整) */
-.button {
-    /* ... (他の設定は前回のまま) ... */
-    background-color: #ff0000; /* 赤色 */
+/* フォームの入力フィールド */
+.input,
+.textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; /* paddingを含めて幅100%にする */
+    font-size: 16px;
 }
-.button:hover {
+
+/* 登録ボタン (赤色のボタン) */
+.registerSubmitButton {
+    width: 100%;
+    padding: 15px;
+    background-color: #ff0000; /* 赤色 */
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 30px;
+    box-shadow: 0 4px 6px rgba(255, 0, 0, 0.3);
+}
+
+.registerSubmitButton:hover {
     background-color: #cc0000;
 }
+
+/* 評価スターコンテナ（RatingComponentで使用） */
+.ratingContainer {
+    margin-bottom: 15px;
+    display: flex;
+}
+/* styles.star の定義は、以前のコードに基づき、RatingComponentのインラインスタイルで代用しています。*/
+
 
 /* ------------------------------------------- */
 /* 記録詳細画面 S-03 専用スタイル */
