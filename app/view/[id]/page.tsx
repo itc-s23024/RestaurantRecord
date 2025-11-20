@@ -38,16 +38,46 @@ async function getRecordById(id: string) {
     if (id === '1') {
         return {
             id: '1',
+            title: 'スパゲティ',
+            restaurant_name: 'サイゼリヤ 笹塚駅前店',
+            visit_date: '2024年11月15日',
+            visit_count: 1,
+            // 実際の画像URLを設定してください
+            image_url: 'https://images.unsplash.com/photo-1549488344-932c02c462f8?fit=crop&w=600&h=400&q=80', 
+            tags: ['イタリアン', 'スパゲティ','サイゼリヤ'],
+            rating: 4,
+            memo: 'とても美味しかった',
+            location: '東京都渋谷区笹塚1丁目48-14', // Googleマップ用
+        };
+    }
+    if (id === '2') {
+        return {
+            id: '2',
             title: '鰻重',
             restaurant_name: 'うなぎ屋恵比寿',
             visit_date: '2025年11月2日',
-            visit_count: 1,
+            visit_count: 2,
             // 実際の画像URLを設定してください
             image_url: 'https://images.unsplash.com/photo-1549488344-932c02c462f8?fit=crop&w=600&h=400&q=80', 
             tags: ['和食', 'うなぎ'],
             rating: 3,
             memo: 'とても美味しかった\n店は少し汚かった',
             location: '東京都渋谷区恵比寿', // Googleマップ用
+        };
+    }
+    if (id === '3') {
+        return {
+            id: '3',
+            title: 'aマルゲリータ',
+            restaurant_name: 'ピッツェリアマリノ那覇メインプレス店',
+            visit_date: '2025年11月9日',
+            visit_count: 3,
+            // 実際の画像URLを設定してください
+            image_url: 'https://images.unsplash.com/photo-1549488344-932c02c462f8?fit=crop&w=600&h=400&q=80', 
+            tags: ['イタリアン', 'ピザ'],
+            rating: 5,
+            memo: 'チーズが濃厚',
+            location: '沖縄県那覇市おもろまち4丁目4-9 サンエー那覇メインプレス1階', // Googleマップ用
         };
     }
     return null; 
@@ -72,8 +102,8 @@ export default async function ViewRecordPage({ params }: { params: { id: string 
             
             {/* 1. ヘッダー（戻るボタンとタイトル） */}
             <header className={styles.detailHeader}>
-                <Link href="/home" className={styles.backButton}>
-                    &#8592; 戻る
+                <Link href="/" className={styles.backButton}>
+                     戻る
                 </Link>
                 <h1 className={styles.detailTitle}>食事記録詳細</h1>
             </header>
