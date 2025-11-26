@@ -1,14 +1,36 @@
 
 'use client';  // 入力操作があるので client component にします
 
-import React, { useState, ChangeEvent } from 'react'; // useStateなどを追加
+import React, { useState, ChangeEvent, KeyboardEvent } from 'react'; // useStateなどを追加 KeyboardEventを追加
 import Link from 'next/link';
-import { ArrowLeft, Camera } from 'lucide-react'; // 矢印アイコン Cameraアイコンを追加
+import { ArrowLeft, Camera, X } from 'lucide-react'; // 矢印アイコン Cameraアイコンを追加 X(削除アイコン)を追加
 import styles from '../page.module.css';   // ★一つ上の階層のCSSファイルを読み込む
 
 export default function Register() {
   // ▼▼▼ 追加6: 画像プレビュー用のロジック ▼▼▼
    const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+   // ▼▼▼ 追加7: タグ管理用のステートとロジック ▼▼▼
+   const [tags, setTags] = useState<string[]>([]); // 追加されたタグのリスト
+   const [tagInput, setTagInput] = useState('');   // 入力中の文字
+
+   // Enterキーが押された時の処理
+   const handleTagKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+     if (e.key === 'Enter') {
+       e.preventDefault(); // フォーム送信を防ぐ
+       if (tagInput.trim() !== '') {
+         // 空白でなければリストに追加
+         setTags([...tags, tagInput.trim()]);
+         setTagInput(''); // 入力欄をクリア
+       }
+     }
+   };
+
+   // タグを削除する処理
+   const removeTag = (indexToRemove: number) => {
+     setTags(tags.filter((_, index) => index !== indexToRemove));
+   };
+   // ▲▲▲ 追加7ここまで ▲▲▲
 
    // 画像が選択された時の処理
    const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -107,6 +129,36 @@ export default function Register() {
              </label>
             </div>
             {/* ▲▲▲ 変更6ここまで ▲▲▲ */}
+            {/* ▼▼▼ 追加: タグ入力フォーム ▼▼▼ */}
+           <div className={styles.formGroup}>
+             <label className={styles.label}>タグ</label>
+             <input 
+               type="text" 
+               placeholder="タグを入力してEnter" 
+               className={styles.inputField}
+               value={tagInput}
+               onChange={(e) => setTagInput(e.target.value)}
+               onKeyDown={handleTagKeyDown} // Enterキーを検知
+             />
+             
+             {/* 追加されたタグの表示エリア */}
+             <div className={styles.addedTagsArea}>
+               {tags.map((tag, index) => (
+                 <span key={index} className={styles.addedTagItem}>
+                   {tag}
+                   {/* 削除ボタン */}
+                   <button 
+                     type="button" 
+                     onClick={() => removeTag(index)}
+                     className={styles.removeTagButton}
+                   >
+                     <X size={14} />
+                   </button>
+                 </span>
+               ))}
+             </div>
+           </div>
+           {/* ▲▲▲ 追加ここまで ▲▲▲ */}
         </form>
       </div>
     </main>

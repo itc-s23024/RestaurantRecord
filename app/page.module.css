@@ -416,3 +416,43 @@
 }
 
 /* ▲▲▲ 追加6ここまで ▲▲▲ */
+
+/* ▼▼▼ 追加7: タグ入力フォーム用のスタイル ▼▼▼ */
+
+ /* 追加されたタグが並ぶエリア */
+ .addedTagsArea {
+   display: flex;
+   flex-wrap: wrap; /* 折り返して表示 */
+   gap: 8px;
+   margin-top: 12px;
+ }
+
+ /* 個別のタグ（削除ボタン付き） */
+ .addedTagItem {
+   display: flex;
+   align-items: center;
+   background-color: #e5e7eb; /* 薄いグレー */
+   padding: 6px 12px;
+   border-radius: 9999px;
+   font-size: 14px;
+   color: #000;
+ }
+
+ /* タグ削除ボタン（×マーク） */
+ .removeTagButton {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   background: none;
+   border: none;
+   margin-left: 6px;
+   cursor: pointer;
+   color: #666;
+   padding: 0;
+ }
+
+ .removeTagButton:hover {
+   color: #000;
+ }
+ /* ▲▲▲ 追加7ここまで ▲▲▲ */
+
