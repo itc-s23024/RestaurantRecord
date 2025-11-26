@@ -16,6 +16,7 @@ export default function Register() {
 
    // ▼▼▼ 追加8: 評価（星の数）のステート ▼▼▼
    const [rating, setRating] = useState(0); // 初期値は0（未評価）
+   const [memo, setMemo] = useState(''); // メモ入力用のステートを追加 追加9
 
    // Enterキーが押された時の処理
    const handleTagKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -187,6 +188,27 @@ export default function Register() {
              </div>
            </div>
            {/* ▲▲▲ 追加8ここまで ▲▲▲ */}
+           {/* ▼▼▼ 追加9: 一口メモフォーム ▼▼▼ */}
+           <div className={styles.formGroup}>
+             <label className={styles.label}>一口メモ</label>
+             <textarea
+               placeholder="感想やメモを入力"
+               className={styles.textArea}
+               value={memo}
+               onChange={(e) => setMemo(e.target.value)}
+             />
+           </div>
+
+           {/* ▼▼▼ 追加9: 登録ボタン ▼▼▼ */}
+           <button
+             type="button" // 今回は画面遷移なしのためbutton
+             className={styles.submitButton}
+             onClick={() => alert('登録処理をここに実装します')}
+           >
+             登録する
+           </button>
+           {/* ▲▲▲ 追加9ここまで ▲▲▲ */}
+           
         </form>
       </div>
     </main>

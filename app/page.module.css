@@ -479,4 +479,48 @@
  }
  /* ▲▲▲ 追加8ここまで ▲▲▲ */
 
- 
+ /* ▼▼▼ 追加9: 一口メモ・登録ボタン用のスタイル ▼▼▼ */
+ /* テキストエリア（基本はinputFieldと同じだが高さを持たせる） */
+ .textArea {
+   width: 100%;
+   padding: 12px;
+   font-size: 16px;
+   border: 2px solid #000;
+   border-radius: 2px;
+   outline: none;
+   background-color: #fff;
+   box-sizing: border-box;
+   min-height: 120px; /* 十分な高さを確保 */
+   resize: vertical; /* 縦方向のみリサイズ許可 */
+   font-family: inherit; /* フォントを継承させる */
+ }
+
+ .textArea::placeholder {
+   color: #d1d5db;
+ }
+
+ .textArea:focus {
+   border-color: #f97316;
+ }
+
+ /* 登録ボタン（赤色） */
+ .submitButton {
+   width: 100%;
+   background-color: #ff0000; /* 鮮やかな赤 */
+   color: #fff;
+   font-size: 18px;
+   font-weight: bold;
+   padding: 16px 0; /* 上下のパディング */
+   border: none;
+   border-radius: 9999px; /* カプセル型 */
+   cursor: pointer;
+   margin-top: 32px; /* 上の要素との間隔 */
+   transition: opacity 0.2s;
+   box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* 軽い影 */
+ }
+
+ .submitButton:hover {
+   opacity: 0.8; /* ホバー時に少し薄く */
+ }
+ /* ▲▲▲ 追加9ここまで ▲▲▲ */
+
