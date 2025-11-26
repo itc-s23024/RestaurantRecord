@@ -365,3 +365,54 @@
 }
 /* ▲▲▲ 追加5ここまで ▲▲▲ */
 
+/* ▼▼▼ 追加6: 画像アップロード用のスタイル ▼▼▼ */
+
+/* 画像選択エリア（ラベルをボタンのように使う） */
+.imageUploadLabel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 160px; /* 画像がない時も押しやすい高さ */
+  border: 2px solid #000;
+  border-radius: 2px;
+  background-color: #f9fafb; /* 薄いグレー */
+  cursor: pointer;
+  overflow: hidden; /* 画像がはみ出ないように */
+  position: relative;
+  transition: background-color 0.2s;
+}
+
+.imageUploadLabel:hover {
+  background-color: #f3f4f6;
+}
+
+/* プレビュー画像 */
+.previewImage {
+  width: 100%;
+  height: auto;
+  max-height: 300px; /* 縦長すぎないように制限 */
+  object-fit: cover; /* 枠いっぱいに表示 */
+}
+
+/* 画像未選択時のプレースホルダー（アイコンと文字） */
+.placeholderContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: #6b7280; /* グレーの文字 */
+}
+
+.placeholderText {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* input[type="file"] は見た目を隠す */
+.hiddenInput {
+  display: none;
+}
+
+/* ▲▲▲ 追加6ここまで ▲▲▲ */
