@@ -456,3 +456,27 @@
  }
  /* ▲▲▲ 追加7ここまで ▲▲▲ */
 
+/* ▼▼▼ 追加8: 星評価フォーム用のスタイル ▼▼▼ */
+
+ .ratingContainer {
+   display: flex;
+   align-items: center;
+   gap: 8px; /* 星同士の間隔 */
+ }
+
+ .starButton {
+   background: none;
+   border: none;
+   padding: 0;
+   cursor: pointer; /* クリックできる指マークにする */
+   transition: transform 0.1s;
+   display: flex; /* アイコンのズレ防止 */
+ }
+
+ /* クリックした瞬間に少し弾むアニメーション（押し心地を良くするため） */
+ .starButton:active {
+   transform: scale(1.2);
+ }
+ /* ▲▲▲ 追加8ここまで ▲▲▲ */
+
+ 

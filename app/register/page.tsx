@@ -3,7 +3,7 @@
 
 import React, { useState, ChangeEvent, KeyboardEvent } from 'react'; // useStateなどを追加 KeyboardEventを追加
 import Link from 'next/link';
-import { ArrowLeft, Camera, X } from 'lucide-react'; // 矢印アイコン Cameraアイコンを追加 X(削除アイコン)を追加
+import { ArrowLeft, Camera, X, Star } from 'lucide-react'; // 矢印アイコン Cameraアイコンを追加 X(削除アイコン)を追加 Starを追加
 import styles from '../page.module.css';   // ★一つ上の階層のCSSファイルを読み込む
 
 export default function Register() {
@@ -13,6 +13,9 @@ export default function Register() {
    // ▼▼▼ 追加7: タグ管理用のステートとロジック ▼▼▼
    const [tags, setTags] = useState<string[]>([]); // 追加されたタグのリスト
    const [tagInput, setTagInput] = useState('');   // 入力中の文字
+
+   // ▼▼▼ 追加8: 評価（星の数）のステート ▼▼▼
+   const [rating, setRating] = useState(0); // 初期値は0（未評価）
 
    // Enterキーが押された時の処理
    const handleTagKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -129,7 +132,8 @@ export default function Register() {
              </label>
             </div>
             {/* ▲▲▲ 変更6ここまで ▲▲▲ */}
-            {/* ▼▼▼ 追加: タグ入力フォーム ▼▼▼ */}
+
+            {/* ▼▼▼ 追加7: タグ入力フォーム ▼▼▼ */}
            <div className={styles.formGroup}>
              <label className={styles.label}>タグ</label>
              <input 
@@ -158,7 +162,31 @@ export default function Register() {
                ))}
              </div>
            </div>
-           {/* ▲▲▲ 追加ここまで ▲▲▲ */}
+           {/* ▲▲▲ 追加7ここまで ▲▲▲ */}
+
+           {/* ▼▼▼ 追加8: 星評価フォーム ▼▼▼ */}
+           <div className={styles.formGroup}>
+             <label className={styles.label}>評価</label>
+             <div className={styles.ratingContainer}>
+               {[1, 2, 3, 4, 5].map((star) => (
+                 <button
+                   key={star}
+                   type="button" // フォーム送信を防ぐために必須
+                   onClick={() => setRating(star)} // クリックで評価をセット
+                   className={styles.starButton}
+                 >
+                   <Star
+                     size={40} // 押しやすいように少し大きめ
+                     // 条件分岐: 現在の評価以下なら黄色、それ以外はグレー
+                     fill={star <= rating ? '#FFFF00' : '#e5e7eb'}
+                     color={star <= rating ? '#eab308' : '#d1d5db'}
+                     strokeWidth={1}
+                   />
+                 </button>
+               ))}
+             </div>
+           </div>
+           {/* ▲▲▲ 追加8ここまで ▲▲▲ */}
         </form>
       </div>
     </main>
