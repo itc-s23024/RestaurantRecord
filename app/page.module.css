@@ -1,451 +1,285 @@
-/*
- * ページ全体とコンテナ
- */
-.container {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 0 15px;
-    background-color: #fff;
-    min-height: 100vh;
+/* 全体のコンテナ */
+.main {
+  min-height: 100vh;
+  background-color: #fff;
+  /* スマホ幅を想定して最大幅を設定（任意） */
+  max-width: 480px; 
+  margin: 0 auto;
+  border-left: 1px solid #eee;
+  border-right: 1px solid #eee;
 }
 
-/*
- * 1. ヘッダー（ごちノート）
- */
+/* ヘッダー全体のスタイル */
 .header {
-    padding: 20px 0 10px;
-    text-align: left;
-}
-.header h1 {
-    font-size: 28px;
-    font-weight: 700;
-    color: #333;
-    margin: 0;
-}
-.header p {
-    font-size: 14px;
-    color: #666;
-    margin-top: 2px;
+  padding: 24px 20px 20px; /* 上 左右 下 の余白 */
+  border-bottom: 6px solid #000; /* ヘッダー下の黒い線 */
+  background-color: #fff;
 }
 
-/*
- * 2. 検索バー
- */
-.searchBar {
-    position: relative;
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
+/* タイトル周り */
+.titleContainer {
+  margin-bottom: 16px;
 }
-.searchInput {
-    width: 100%;
-    padding: 10px 10px 10px 40px; /* アイコン分のスペースを確保 */
-    border: 1px solid #ccc;
-    border-radius: 25px; /* 丸みをつける */
-    font-size: 16px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+
+.appTitle {
+  font-size: 28px;
+  font-weight: bold;
+  color: #000;
+  margin: 0;
+  margin-bottom: 4px;
+  line-height: 1.2;
 }
+
+.subTitle {
+  font-size: 14px;
+  color: #333;
+  margin: 0;
+  font-weight: 500;
+}
+
+/* 検索窓周り */
+.searchWrapper {
+  position: relative; /* アイコンを絶対配置するための基準 */
+  width: 100%;
+}
+
 .searchIcon {
-    position: absolute;
-    left: 15px;
-    font-size: 18px;
-    color: #999;
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%); /* 垂直方向の中央揃え */
+  color: #333;
+  pointer-events: none; /* アイコンをクリックしても入力欄にフォーカスがいくように */
+  display: flex;
+  align-items: center;
 }
 
-/*
- * 3. タブフィルター
- */
+.searchInput {
+  width: 100%;
+  padding: 8px 16px 8px 44px; /* 左のpaddingを多めにとってアイコンと重ならないように */
+  font-size: 16px;
+  border: 2px solid #000; /* 太めの黒枠 */
+  border-radius: 9999px; /* 完全に丸くする（カプセル型） */
+  outline: none;
+  box-sizing: border-box; /* paddingを含めて幅を計算 */
+  transition: border-color 0.2s;
+}
+
+.searchInput::placeholder {
+  color: #ccc;
+}
+
+.searchInput:focus {
+  border-color: #f97316; /* フォーカス時にオレンジ色にする（任意） */
+}
+
+/* コンテンツエリア（仮） */
+.content {
+  padding: 16px;
+}
+
+/* ▼▼▼ 追加1: フィルター・タグセクション ▼▼▼ */
 .filterSection {
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-    padding-bottom: 10px;
-    /* スクロールバーで隠れないよう、padding-rightでスペースを確保 */
-}
-.filterIcon {
-    font-size: 20px;
-    color: #555;
-    margin-right: 15px;
-    transform: rotate(90deg); /* フィルターアイコンを横向きに */
+  display: flex;
+  align-items: center;
+  padding: 10px 16px;
+  background-color: #fff;
+  border-bottom: 1px solid #eee; /* 下に区切り線 */
+  gap: 10px; /* アイコンとタグリストの間隔 */
 }
 
-.tabContainer {
-    display: flex;
-    overflow-x: scroll; /* 横スクロールを可能にする */
-    white-space: nowrap;
-    -webkit-overflow-scrolling: touch; /* スムーズなスクロール */
-    /* スクロールバーを隠す (任意) */
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-}
-.tabContainer::-webkit-scrollbar {
-    display: none;
+.filterIconButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0; /* 縮まないように固定 */
 }
 
-.tabButton {
-    /* タブの基本的なスタイル */
-    padding: 8px 15px;
-    margin-right: 8px;
-    border: 1px solid #ccc;
-    border-radius: 20px;
-    background-color: #f0f0f0;
-    color: #555;
-    font-size: 14px;
-    cursor: pointer;
-    flex-shrink: 0; /* スクロール時に縮まないようにする */
+.tagList {
+  display: flex;
+  gap: 8px; /* タグ同士の間隔 */
+  overflow-x: auto; /* 横スクロールを有効化 */
+  white-space: nowrap; /* タグを改行させない */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  padding-right: 16px; /* 右端の余白 */
+  
+  /* スクロールバーを非表示にする設定（見た目を綺麗にするため） */
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 }
-.tabButton.active {
-    /* 「すべて」などアクティブなタブのスタイル */
-    background-color: #007bff; /* 青色 */
-    color: white;
-    border-color: #007bff;
+.tagList::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
 }
 
-/*
- * 4. 記録カードのリスト
- */
-.recordList {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    padding-bottom: 100px; /* 固定フッターとの重複を防ぐ */
+.tagButton {
+  padding: 5px 14px;
+  border-radius: 9999px; /* 丸みのあるピル型 */
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+  flex-shrink: 0; /* スクロール時に潰れないようにする */
 }
 
-.recordCard {
-    /* 記録カードの親要素 */
-    display: block; /* Link要素をブロック要素にする */
-    border: 1px solid #eee;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    text-decoration: none; /* リンクの下線を消す */
-    color: inherit;
-    overflow: hidden;
+/* 選択中のスタイル（青背景・白文字） */
+.tagActive {
+  background-color: #007bff; /* 鮮やかな青（デザインに合わせて調整可） */
+  color: #fff;
 }
 
-.cardContent {
-    padding: 15px;
+/* 未選択のスタイル（グレー背景・黒文字） */
+.tagInactive {
+  background-color: #e0e0e0; /* 薄いグレー */
+  color: #000;
+}
+/* ▲▲▲ 追加1ここまで ▲▲▲ */
+
+/* ▼▼▼ 追加2: カードリストのスタイル ▼▼▼ */
+.content {
+  padding: 20px; /* 左右の余白を広げてカードを中央に寄せる */
+  background-color: #fff;
+  padding-bottom: 80px; /* 下部の余白（将来的にFABなどが来るかも） */
+  flex: 1;
+  
+  /* フレックスボックスで左寄せにする設定を追加（念のため） */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* ★これで中の要素（カード）を左に寄せます */
+}
+
+.card {
+  border: 3px solid #000; /* デザインに合わせた太い黒枠 */
+  margin-bottom: 24px; /* カード間の余白を少し詰める */
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+
+  /* 横幅を制限してスリムにする */
+  width: 100%;
+  max-width: 320px; /* ★ここ重要: カードの最大幅を制限 */
+  margin-left: 0;
+  margin-right: auto;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05); /* ほんの少し影をつけても良いかも（任意） */
+}
+
+/* 画像エリア（プレースホルダー） */
+.cardImageArea {
+  width: 100%;
+  height: 140px; /* ★高さを200pxから140pxに縮小 */
+  background-color: #fff; /* 白背景 */
+  border-bottom: 1px solid #ccc; /* 画像と詳細の区切り線 */
+}
+
+.cardBody {
+  padding: 12px 12px 8px; /* 余白を全体的に小さく */
+  text-align: center; /* 内容を中央揃え */
 }
 
 .cardTitle {
-    font-size: 20px;
-    font-weight: bold;
-    margin-top: 0;
-    margin-bottom: 8px;
+  font-size: 20px;
+  font-weight: bold;
+  margin: 0 0 8px 0; /* 下の余白も詰める */
+  color: #000;
 }
 
-.tagChipsArea {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-bottom: 10px;
+/* カード内のタグ */
+.cardTags {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px; /* タグ同士の間隔を詰める */
+  margin-bottom: 8px;
 }
 
-.tagChip {
-    background-color: #f0f0f0;
-    color: #555;
-    padding: 4px 10px;
-    border-radius: 15px;
-    font-size: 12px;
+.cardTagItem {
+  background-color: #eee; /* 薄いグレー */
+  padding: 3px 10px; /* タグの内側の余白を小さく */
+  border-radius: 9999px;
+  font-size: 11px; /* 文字を少し小さく */
+  color: #333;
 }
 
+/* 星評価 */
 .starRating {
-    /* 星の評価のスタイル */
-    font-size: 20px;
-    margin-bottom: 8px;
+  display: flex;
+  justify-content: flex-start; /* 左寄せ（画像に合わせるならこちら） */  /* もし中央揃えなら justify-content: center; */
+  margin-bottom: 6px; /* コメント欄との隙間をなくす、あるいは微調整 */
+  padding-left: 4px; /* 左端に少し余裕を持たせる */
+}
+/* デザイン画を見ると星は左寄せに見えますね。もし中央がよければ上の center を有効にしてください */
+
+.starIcon {
+  margin-right: 2px;
 }
 
-.cardMemo {
-    /* 一口メモのスタイル */
-    font-size: 14px;
-    color: #444;
-    margin: 0;
-    white-space: pre-wrap; /* 改行を反映させる */
+/* コメントエリア */
+.cardComment {
+  background-color: #dcdcdc; /* 濃いめのグレー背景 */
+  padding: 10px 12px; /* 余白を小さく */
+  border-top: 1px solid #ccc;
+  min-height: 50px; /* 最小高さを小さく */
 }
 
+.commentLine {
+  margin: 0;
+  font-size: 12px; /* コメントの文字サイズを小さく */
+  color: #000;
+  line-height: 1.4;
+  text-align: left; /* 左寄せ */
+}
+/* ▲▲▲ 追加2ここまで ▲▲▲ */
 
-/*
- * 5. 新規登録ボタン (フッター固定)
- */
-.registerButton {
-    /* ボタンを画面下に固定する設定 */
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    
-    /* デザイン */
-    background-color: #ff5722; /* オレンジ色 */
-    color: white;
-    padding: 12px 30px;
-    border-radius: 30px;
-    font-size: 18px;
-    font-weight: bold;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    box-shadow: 0 4px 8px rgba(255, 87, 34, 0.4);
-    z-index: 1000; /* 他の要素の上に表示 */
+/* ▼▼▼ 追加3: 新規登録ボタンのスタイル ▼▼▼ */
+/* ボタンを配置するコンテナ（位置決め用） */
+.fabContainer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  pointer-events: none; /* コンテナ自体はクリックを邪魔しないように */
+  z-index: 100; /* 最前面に表示 */
 }
 
-.plusIcon {
-    font-size: 24px;
-    margin-right: 8px;
+/* 実際のボタン */
+.fabButton {
+  pointer-events: auto; /* ボタンはクリック可能に */
+  
+  /* レイアウトとサイズ */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px; /* アイコンと文字の間隔 */
+  
+  width: 90%; /* スマホ幅の90% */
+  max-width: 440px; /* メイン幅(480px)から余白を引いた最大幅 */
+  margin-bottom: 24px; /* 下からの距離 */
+  padding: 14px 24px;
+  
+  /* 見た目 */
+  background-color: #FF5700; /* デザインに近い鮮やかなオレンジ */
+  color: #fff;
+  border: none;
+  border-radius: 9999px; /* 完全な丸み（カプセル型） */
+  
+  /* 文字 */
+  font-size: 18px;
+  font-weight: bold;
+  
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(255, 87, 0, 0.4); /* オレンジ色の薄い影 */
+  transition: transform 0.2s, background-color 0.2s;
 }
 
-
-/* ------------------------------------------- */
-/* 新規登録画面 S-02 専用スタイル */
-/* ------------------------------------------- */
-
-/* 新規登録ヘッダー */
-.registerHeader {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 20px;
-    padding-bottom: 10px;
-    text-align: left;
+.fabButton:active {
+  transform: scale(0.98); /* 押したときに少し凹むアニメーション */
+  background-color: #e64a00; /* 押したときに少し暗く */
 }
-
-/* 戻るボタンの修正 (前回のものを再利用) */
-.backButton {
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-    color: #333;
-    font-size: 16px;
-    font-weight: bold;
-    padding: 10px 0;
-    margin-bottom: 5px;
-}
-/* 矢印はJSX側で記述したため、ここでは::beforeは不要（もしあれば削除） */
-
-
-/* フォーム全体（styles.form）やグループ（styles.formGroup）は共通CSSをそのまま利用 */
-
-/* フォームのラベル */
-.label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 5px;
-    color: #333;
-}
-
-/* フォームの入力フィールド */
-.input,
-.textarea {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box; /* paddingを含めて幅100%にする */
-    font-size: 16px;
-}
-
-/* 登録ボタン (赤色のボタン) */
-.registerSubmitButton {
-    width: 100%;
-    padding: 15px;
-    background-color: #ff0000; /* 赤色 */
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 18px;
-    font-weight: bold;
-    cursor: pointer;
-    margin-top: 30px;
-    box-shadow: 0 4px 6px rgba(255, 0, 0, 0.3);
-}
-
-.registerSubmitButton:hover {
-    background-color: #cc0000;
-}
-
-/* 評価スターコンテナ（RatingComponentで使用） */
-.ratingContainer {
-    margin-bottom: 15px;
-    display: flex;
-}
-/* styles.star の定義は、以前のコードに基づき、RatingComponentのインラインスタイルで代用しています。*/
-
-
-/* ------------------------------------------- */
-/* 記録詳細画面 S-03 専用スタイル */
-/* ------------------------------------------- */
-
-/* ヘッダー */
-.detailHeader {
-    padding: 10px 0;
-    display: flex;
-    flex-direction: column; 
-    margin-bottom: 20px;
-}
-
-.backButton {
-    /* 戻るボタンのスタイル */
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-    color: #333;
-    font-size: 16px;
-    font-weight: bold;
-    padding: 5px 0;
-    margin-bottom: 5px;
-}
-.backButton::before {
-    content: '←';
-    font-size: 20px;
-    margin-right: 10px;
-}
-
-.detailTitle {
-    font-size: 24px;
-    font-weight: bold;
-    margin: 0;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 10px;
-}
-
-/* メイン画像 */
-.imageContainer {
-    width: 100%;
-    overflow: hidden;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-.mainImage {
-    width: 100%;
-    height: auto;
-    display: block;
-    object-fit: cover;
-}
-
-/* 詳細コンテンツ */
-.detailContent {
-    padding: 20px 0;
-}
-
-.recordTitle {
-    font-size: 30px;
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
-.recordMeta {
-    font-size: 14px;
-    color: #666;
-    margin-top: 0;
-    margin-bottom: 5px;
-}
-.recordMeta span {
-    margin: 0 8px;
-}
-
-/* 各セクション */
-.detailSection {
-    margin-top: 20px;
-}
-
-.sectionHeader {
-    font-size: 16px;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 10px;
-    border-left: 4px solid #f90; 
-    padding-left: 10px;
-}
-
-/* タグチップ（再利用） */
-.tagChipsArea {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-}
-.tagChip {
-    background-color: #f0f0f0;
-    color: #555;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 14px;
-}
-
-/* 一口メモ */
-.memoText {
-    white-space: pre-wrap;
-    border: 1px solid #eee;
-    padding: 10px;
-    border-radius: 4px;
-    background-color: #fafafa;
-}
-
-/* 区切り線 */
-.divider {
-    border: 0;
-    border-top: 1px solid #eee;
-    margin: 30px 0;
-}
-
-/* 場所とマップボタン */
-.mapArea {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border: 1px solid #ccc;
-    height: 100px; 
-    border-radius: 4px;
-    padding: 10px;
-}
-.locationText {
-    font-size: 14px;
-    color: #444;
-}
-
-.mapButtonLink {
-    text-decoration: none;
-    background-color: #fff;
-    color: #007bff;
-    border: 1px solid #007bff;
-    padding: 8px 15px;
-    border-radius: 4px;
-    cursor: pointer;
-    white-space: nowrap;
-}
-
-/* 8. フッターボタン（編集・削除） */
-.footerButtons {
-    display: flex;
-    justify-content: space-around;
-    padding: 20px 0 40px;
-    gap: 10px;
-}
-
-.editButton {
-    flex: 1;
-    padding: 12px;
-    font-size: 16px;
-    font-weight: bold;
-    border-radius: 6px;
-    text-align: center;
-    cursor: pointer;
-    text-decoration: none;
-    background-color: #007bff; 
-    color: white;
-    border: 1px solid #007bff;
-}
-
-.deleteForm {
-    flex: 1;
-}
-
-.deleteButton {
-    width: 100%;
-    padding: 12px;
-    font-size: 16px;
-    font-weight: bold;
-    border-radius: 6px;
-    text-align: center;
-    cursor: pointer;
-    background-color: #fff;
-    color: #dc3545; 
-    border: 1px solid #dc3545;
-}
+/* ▲▲▲ 追加3ここまで ▲▲▲ */
