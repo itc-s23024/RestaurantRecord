@@ -283,3 +283,85 @@
   background-color: #e64a00; /* 押したときに少し暗く */
 }
 /* ▲▲▲ 追加3ここまで ▲▲▲ */
+
+/* ▼▼▼ 追加4: 新規登録画面用のスタイル ▼▼▼ */
+
+/* ヘッダーの中身（戻るボタンとタイトルの横並び） */
+.headerRow {
+  display: flex;
+  align-items: center;
+  gap: 16px; /* アイコンと文字の間隔 */
+}
+
+/* 戻るボタン（矢印） */
+.backButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000;
+  text-decoration: none; /* リンクの下線を消す */
+  cursor: pointer;
+  padding: 0;
+  background: none;
+  border: none;
+  transition: opacity 0.2s;
+}
+
+.backButton:hover {
+  opacity: 0.6;
+}
+
+/* ページタイトル「新規登録」 */
+.pageTitle {
+  font-size: 20px;
+  font-weight: bold;
+  color: #000;
+  margin: 0;
+  line-height: 1.2;
+}
+
+/* フォーム全体を囲うエリア */
+.formContainer {
+  padding: 24px 20px; /* 左右の余白はヘッダーと合わせる */
+  width: 100%;
+}
+/* ▲▲▲ 追加4ここまで ▲▲▲ */
+
+/* ▼▼▼ 追加5: 入力フォームのスタイル ▼▼▼ */
+
+/* 各入力項目のまとまり */
+.formGroup {
+  margin-bottom: 24px; /* 下に余白 */
+}
+
+/* ラベル（タイトル、飲食店名など） */
+.label {
+  display: block; /* 縦並びにする */
+  font-size: 18px; /* 少し大きめ */
+  font-weight: bold;
+  color: #000;
+  margin-bottom: 8px; /* 入力欄との隙間 */
+}
+
+/* 入力フィールド共通 */
+.inputField {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 16px;
+  border: 2px solid #000; /* はっきりとした黒枠 */
+  border-radius: 2px; /* ほぼ直角に近い角 */
+  outline: none;
+  background-color: #fff;
+  box-sizing: border-box; /* paddingを含めた幅計算 */
+  color: #000;
+}
+
+.inputField::placeholder {
+  color: #d1d5db; /* 薄いグレーのプレースホルダー */
+}
+
+.inputField:focus {
+  border-color: #f97316; /* フォーカス時にオレンジ（任意） */
+}
+/* ▲▲▲ 追加5ここまで ▲▲▲ */
+
