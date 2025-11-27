@@ -524,3 +524,116 @@
  }
  /* ▲▲▲ 追加9ここまで ▲▲▲ */
 
+/* ▼▼▼ 追加10: 閲覧画面（詳細画面）用のスタイル ▼▼▼ */
+/* ヘッダーの中身を「左右」に配置するためのコンテナ */
+.headerBetween {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* 両端に配置（左に矢印、右に編集） */
+  width: 100%;
+}
+
+/* 編集ボタン（ペンアイコン） */
+.editButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+  padding: 8px; /* タップしやすいように余白 */
+  transition: opacity 0.2s;
+}
+
+.editButton:hover {
+  opacity: 0.6;
+}
+
+/* 閲覧画面のタイトル（中央に置きたい場合用） */
+/* 必要に応じて headerBetween 内でマージン調整などを行ってください */
+ /* ▲▲▲ 追加10ここまで ▲▲▲ */
+
+ /* ▼▼▼ 追加11閲覧画面（詳細画面）用のスタイル ▼▼▼ */
+
+/* ヘッダー左右配置用 */
+.headerBetween {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.editButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+  padding: 8px;
+  transition: opacity 0.2s;
+}
+
+/* 1. タイトル（一番上） */
+.viewMainTitle {
+  font-size: 28px;
+  font-weight: bold;
+  color: #000;
+  margin-bottom: 16px;
+  line-height: 1.3;
+}
+
+/* 2. メイン画像 */
+.viewImage {
+  width: 100%;
+  height: 240px; /* 固定の高さ */
+  object-fit: cover;
+  border: 3px solid #000; /* 太い黒枠 */
+  border-radius: 4px;
+  margin-bottom: 16px;
+  background-color: #f3f4f6;
+  display: block; /* 画像の下に隙間ができないように */
+}
+
+/* 3. 飲食店名（ピンアイコン付き） */
+.viewRestaurant {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 16px; /* 下の要素との余白 */
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* 4. 日付と訪問回数の横並びコンテナ */
+.viewMetaRow {
+  display: flex;
+  align-items: center;
+  gap: 16px; /* 日付と回数の間隔 */
+  margin-bottom: 24px;
+  font-size: 16px;
+  color: #000;
+}
+
+/* 日付：枠線なし、太字 */
+.dateItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: bold;
+}
+
+/* 訪問回数：丸い枠線（バッジ風） */
+.countBadge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #000;
+  border-radius: 9999px;
+  padding: 4px 12px;
+  font-weight: bold;
+  font-size: 14px;
+  background-color: #fff;
+}
+ /* ▲▲▲ 追加11ここまで ▲▲▲ */
