@@ -1,33 +1,54 @@
 'use client';   //【重要】useStateを使うために必要
 
-import { useState } from 'react'; //  追加(タグ・フィルター)
+import { useState, useEffect } from 'react'; //  追加(タグ・フィルター) useEffectを追加
 import styles from './page.module.css';
 import { Search, Filter, Star, Plus } from 'lucide-react'; //   Filterを追加  Starを追加 Plusアイコンを追加
+import Link from 'next/link'; //画面遷移
+import { searchFoods } from './server-actions'; // ★サーバーアクションをインポート
+
+// 型定義（TypeScriptのエラー防止のため）
+type FoodRecord = {
+  id: number;
+  image: string;
+  name: string;
+  tags: string[];
+  rating: number;
+  comment: string;
+  date: string;
+  count: number;
+};
 
 export default function Home() {
   // 表示確認用のダミーデータ（データ連携はせず配列で用意）
   const tags = ['すべて', 'イタリアン', 'スパゲティ', 'サイゼリヤ', '和食', 'うなぎ'];
   // 選択中のタグを管理するState
   const [activeTag, setActiveTag] = useState('すべて');
-  // ▼▼▼ 追加2: 表示用のダミーデータ ▼▼▼
-  const foodRecords = [
-    {
-      id: 1,
-      image: '', // 画像は今回はプレースホルダー
-      name: 'スパゲティ',
-      tags: ['イタリアン', 'スパゲティ', 'サイゼリヤ'],
-      rating: 4, // 5段階評価
-      comment: 'とても美味しかった',
-    },
-    {
-      id: 2,
-      image: '',
-      name: '鰻重',
-      tags: ['和食', 'うなぎ'],
-      rating: 3,
-      comment: 'とても美味しかった\n店が少し汚かった', // 改行を含むテキスト
-    },
-  ];
+
+  // ▼▼▼ 変更: データはstateで管理し、初期値は空配列にする ▼▼▼
+  const [records, setRecords] = useState<FoodRecord[]>([]);
+  const [searchQuery, setSearchQuery] = useState(''); // 検索キーワード用
+  // 画面が表示された時にデータを読み込む
+  useEffect(() => {
+    const fetchInitialData = async () => {
+      const data = await searchFoods(''); // 全件取得
+      setRecords(data);
+    };
+    fetchInitialData();
+  }, []);
+   // 検索を実行する関数
+  const handleSearch = async (query: string) => {
+    setSearchQuery(query);
+    const results = await searchFoods(query);
+    setRecords(results);
+  };
+
+  // エンターキーで検索するためのハンドラ
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleSearch(searchQuery);
+    }
+  };
+
   // 星を描画するヘルパー関数
   const renderStars = (rating: number) => {
     return (
@@ -60,10 +81,14 @@ export default function Home() {
           <div className={styles.searchIcon}>
             <Search size={24} strokeWidth={2.5} />
           </div>
+          {/* ▼▼▼ 検索入力欄の変更 ▼▼▼ */}
           <input 
             type="text" 
             placeholder="検索..." 
             className={styles.searchInput}
+            value={searchQuery}
+            onChange={(e) => handleSearch(e.target.value)} // 文字入力のたびに検索（リアルタイム検索）
+            onKeyDown={handleKeyDown} // エンターキーでも検索
           />
         </div>
       </header>
@@ -92,9 +117,19 @@ export default function Home() {
       {/* ▲▲▲ 追加1ここまで ▲▲▲ */}
 
       {/* ▼▼▼ 追加2 変更: コンテンツエリア（カードリスト） ▼▼▼ */}
+      {/* コンテンツエリア（カードリスト） */}
       <div className={styles.content}>
-        {foodRecords.map((record) => (
-          <div key={record.id} className={styles.card}>
+        {/* データがない場合のメッセージ */}
+        {records.length === 0 && (
+          <p style={{ textAlign: 'center', color: '#666', marginTop: '20px' }}>
+            見つかりませんでした
+          </p>
+        )}
+
+        {records.map((record) => (
+          // カードをクリックしたら詳細画面へ遷移するようにLinkで囲む
+          <Link href={`/view/${record.id}`} key={record.id} style={{ textDecoration: 'none' }}>
+            <div className={styles.card}>
             {/* 上部：画像プレースホルダー */}
             <div className={styles.cardImageArea}>
               {/* ここに将来的に <img /> が入ります */}
@@ -124,15 +159,16 @@ export default function Home() {
               ))}
             </div>
           </div>
+        </Link>
         ))}
         {/* ▲▲▲ 追加2ここまで ▲▲▲ */}
       </div>
       {/* ▼▼▼ ここから追加3: 新規登録ボタン ▼▼▼ */}
        <div className={styles.fabContainer}>
-         <button className={styles.fabButton}>
-           <Plus size={24} strokeWidth={2.5} />
-           <span>新規登録</span>
-         </button>
+         <Link href="/register" className={styles.fabButton}>
+          <Plus size={24} strokeWidth={2.5} />
+          <span>新規登録</span>
+        </Link>
        </div>
        {/* ▲▲▲ 追加3ここまで ▲▲▲ */}
     </main>

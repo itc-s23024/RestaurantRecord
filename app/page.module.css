@@ -156,14 +156,15 @@
 .card {
   border: 3px solid #000; /* デザインに合わせた太い黒枠 */
   margin-bottom: 24px; /* カード間の余白を少し詰める */
-  background-color: #fff;
+  background-color: #FFF;
   display: flex;
   flex-direction: column;
 
   /* 横幅を制限してスリムにする */
-  width: 100%;
+  width: 500px;
+
   max-width: 320px; /* ★ここ重要: カードの最大幅を制限 */
-  margin-left: 0;
+  margin-left: auto;
   margin-right: auto;
   box-shadow: 0 4px 6px rgba(0,0,0,0.05); /* ほんの少し影をつけても良いかも（任意） */
 }
