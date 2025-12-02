@@ -637,3 +637,176 @@
   background-color: #fff;
 }
  /* ▲▲▲ 追加11ここまで ▲▲▲ */
+
+ /* ▼▼▼ 追加12: 詳細画面のタグ表示用 ▼▼▼ */
+
+ /* タグ全体のエリア */
+ .viewTagList {
+   display: flex;
+   flex-wrap: wrap; /* 画面端で折り返す */
+   gap: 8px;        /* タグ同士の間隔 */
+   margin-bottom: 24px; /* 下の要素との余白 */
+ }
+
+ /* 個別のタグ */
+ .viewTagItem {
+   background-color: #eee; /* 薄いグレー背景 */
+   color: #333;
+   padding: 6px 14px;
+   border-radius: 9999px; /* 丸くする */
+   font-size: 14px;
+ }
+ /* ▼▼▼ 追加12: 区切り線 ▼▼▼ */
+ .separator {
+   width: 100%;
+   height: 3px;         /* 線の太さ */
+   background-color: #000; /* 線の色（グレー） */
+   border: none;
+   margin: 0 0 24px 0;  /* 下に余白を持たせる */
+ }
+ /* ▲▲▲ 追加12ここまで ▲▲▲ */
+
+/* ▼▼▼ 追加13: 詳細画面の星評価表示用 ▼▼▼ */
+ .viewStarRating {
+   display: flex;
+   align-items: center;
+   gap: 4px; /* 星同士の間隔 */
+   margin-bottom: 24px; /* 下の要素との余白 */
+ }
+ /* ▲▲▲ 追加13ここまで ▲▲▲ */
+
+/* ▼▼▼ 追加14: 詳細画面の一口メモ表示用 ▼▼▼ */
+ .viewMemo {
+   background-color: #f3f4f6; /* 薄いグレーの背景 */
+   padding: 16px;             /* 内側の余白 */
+   border-radius: 8px;        /* 角を少し丸く */
+   font-size: 16px;
+   line-height: 1.6;          /* 行間を少し広げて読みやすく */
+   color: #333;
+   width: 100%;
+   box-sizing: border-box;
+   white-space: pre-wrap;     /* 改行をそのまま表示する設定 */
+ }
+ /* ▲▲▲ 追加14ここまで ▲▲▲ */
+
+ /* ▼▼▼ 追加15: 店の場所（地図）セクション用 ▼▼▼ */
+ .viewAddress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  color: #333;
+}
+
+/* ▼▼▼ 再修正: 場所セクションのレイアウト ▼▼▼ */
+
+ /* 場所セクション全体の余白 */
+ .locationSection {
+   margin-top: 24px;
+ }
+
+ /* 上段：住所とボタンを横並びにするヘッダー */
+ .locationHeader {
+   display: flex;
+   align-items: center;
+   justify-content: space-between; /* 左右の端に配置 */
+   margin-bottom: 12px; /* 地図との間隔 */
+ }
+
+ /* 左側：アイコン＋住所テキスト */
+ .viewAddress {
+   display: flex;
+   align-items: center;
+   gap: 6px;
+   font-size: 16px;
+   color: #333;
+   font-weight: bold; /* 少し強調 */
+ }
+
+ /* 右側：Googleマップを開くボタン */
+ .googleMapButton {
+   /* absolute配置を削除し、普通のボタンとしてスタイル */
+   display: flex;
+   align-items: center;
+   gap: 6px;
+   
+   background-color: #fff;
+   border: 1px solid #ccc;
+   border-radius: 4px;
+   padding: 6px 12px;
+   
+   font-size: 12px;
+   font-weight: bold;
+   color: #333;
+   text-decoration: none;
+   transition: background-color 0.2s;
+ }
+
+ .googleMapButton:hover {
+   background-color: #f3f3f3;
+ }
+
+ /* 下段：地図表示エリア */
+ .mapContainer {
+   width: 100%;
+   height: 200px;
+   /* 枠線なし、シンプルな四角 */
+ }
+
+ .mapFrame {
+   width: 100%;
+   height: 100%;
+   border: none;
+   display: block;
+   background-color: #eee;
+ }
+  /* ▲▲▲ 追加15ここまで ▲▲▲ */
+/* ▼▼▼ 追加16: 編集・削除ボタン用のスタイル ▼▼▼ */
+
+/* ボタンを並べるエリア */
+.actionButtonContainer {
+  display: flex;
+  justify-content: space-between;   /* 左右に離して配置 */
+  gap: 24px;              /* ボタン同士の間隔 */
+  margin: 8px 0;                 /* 上下の余白 */
+  width: 100%;
+  /* 左揃えやpadding-leftは削除されています */
+}
+
+/* ボタンの共通スタイル */
+.actionButton {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* ★中央揃え */
+
+  gap: 8px;
+    
+  padding: 14px 24px;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: opacity 0.2s;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+
+  flex: 1;              /* ★左右ボタンを均等幅にする */
+  max-width: 200px;     /* ★ボタンの最大幅を制限 */
+}
+
+.actionButton:hover {
+  opacity: 0.8;
+}
+
+/* 編集ボタン（緑色） */
+.editAction {
+  background-color: #1d9bf0;
+}
+
+/* 削除ボタン（赤色） */
+.deleteAction {
+  background-color: #ef4444;
+}
+  /* ▲▲▲ 追加16ここまで ▲▲▲ */
