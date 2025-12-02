@@ -54,13 +54,12 @@ export async function searchFoods(keyword: string) {
     return foodRecordsData;
   }
 
-  // キーワードでフィルタリング（店名やタグ、コメントに含まれるか）
+  // キーワードでフィルタリング（店名やタグに含まれるか）
   const lowerKeyword = keyword.toLowerCase();
   
   const filtered = foodRecordsData.filter((record) => {
     return (
       record.name.toLowerCase().includes(lowerKeyword) ||
-      record.comment.toLowerCase().includes(lowerKeyword) ||
       record.tags.some(tag => tag.toLowerCase().includes(lowerKeyword))
     );
   });
