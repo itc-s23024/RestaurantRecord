@@ -5,8 +5,15 @@ import React, { useState, ChangeEvent, KeyboardEvent } from 'react'; // useState
 import Link from 'next/link';
 import { ArrowLeft, Camera, X, Star } from 'lucide-react'; // 矢印アイコン Cameraアイコンを追加 X(削除アイコン)を追加 Starを追加
 import styles from '../page.module.css';   // ★一つ上の階層のCSSファイルを読み込む
+// ★★★ 追加: server action を読み込む ★★★
+import { addFoodRecord } from '../server-actions';
+// ★★★ 追加: 画面遷移用の Router ★★★
+import { useRouter } from 'next/navigation';
 
 export default function Register() {
+
+  const router = useRouter(); // ← 追加
+
   // ▼▼▼ 追加6: 画像プレビュー用のロジック ▼▼▼
    const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
@@ -18,7 +25,16 @@ export default function Register() {
    const [rating, setRating] = useState(0); // 初期値は0（未評価）
    const [memo, setMemo] = useState(''); // メモ入力用のステートを追加 追加9
 
+   // ▼ 追加: 各フォームの入力値を管理するステート
+  const [title, setTitle] = useState('');
+  const [shopName, setShopName] = useState('');
+  const [visitCount, setVisitCount] = useState(1);
+  const [date, setDate] = useState(
+    new Date().toISOString().split('T')[0]
+  );
+
    // Enterキーが押された時の処理
+   // ------- タグ処理 -------
    const handleTagKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
      if (e.key === 'Enter') {
        e.preventDefault(); // フォーム送信を防ぐ
@@ -37,6 +53,7 @@ export default function Register() {
    // ▲▲▲ 追加7ここまで ▲▲▲
 
    // 画像が選択された時の処理
+   // ------- 画像プレビュー -------
    const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
      const file = e.target.files?.[0];
      if (file) {
@@ -46,6 +63,33 @@ export default function Register() {
      }
    };
    // ▲▲▲ 追加6ここまで ▲▲▲
+
+  // ----------------------------------------------------------
+  // ★★★ 登録ボタンの処理（Supabase に保存 → ホームへ戻る）★★★
+  // ----------------------------------------------------------
+  const handleSubmit = async () => {
+    try {
+      // Supabase に送るデータを作成（画像は除外）
+      await addFoodRecord({
+  title: title,
+  restaurant: shopName,
+  count: visitCount,
+  date: date,
+  tags: tags,
+  rating: rating,
+  memo: memo,
+  imageUrl: null,
+});
+
+      // 登録完了 → ホームへ戻る
+      router.push('/');
+    } catch (error) {
+      alert('登録に失敗しました');
+      console.error(error);
+    }
+  };
+
+
   return (
     <main className={styles.main}>
       {/* ヘッダーエリア (既存の.headerスタイルを再利用) */}
@@ -66,37 +110,43 @@ export default function Register() {
       {/* フォームエリア */}
       <div className={styles.formContainer}>
         <form>
-          {/* タイトル */}
+          {/* タイトル入力フォーム */}
           <div className={styles.formGroup}>
             <label className={styles.label}>タイトル</label>
             <input 
               type="text" 
               placeholder="例: スパゲティ" 
               className={styles.inputField}
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
             />
           </div>
 
-          {/* 飲食店名 */}
+          {/* 飲食店名入力フォーム */}
           <div className={styles.formGroup}>
             <label className={styles.label}>飲食店名</label>
             <input 
               type="text" 
               placeholder="例: サイゼリヤ" 
               className={styles.inputField}
+              value={shopName}
+              onChange={(e) => setShopName(e.target.value)}
             />
           </div>
 
-          {/* 訪問回数 */}
+          {/* 訪問回数入力フォーム */}
           <div className={styles.formGroup}>
             <label className={styles.label}>訪問回数</label>
             <input 
               type="number" 
               defaultValue={1} // 初期値を1に設定
               className={styles.inputField}
+              value={visitCount}
+              onChange={(e) => setVisitCount(Number(e.target.value))}
             />
           </div>
 
-          {/* 日付 */}
+          {/* 日付入力フォーム */}
           <div className={styles.formGroup}>
             <label className={styles.label}>日付</label>
             <input 
@@ -104,6 +154,8 @@ export default function Register() {
               // 今日の日付を初期値にする例（必要に応じて調整）
               defaultValue={new Date().toISOString().split('T')[0]} 
               className={styles.inputField}
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
             />
           </div>
           {/* ▼▼▼ 変更6: 画像入力エリアを丸ごと書き換え ▼▼▼ */}
@@ -114,8 +166,8 @@ export default function Register() {
              <input 
                type="file" 
                accept="image/*"
-               onChange={handleImageChange}
                id="imageUpload"
+               onChange={handleImageChange}
                className={styles.hiddenInput}
              />
              
@@ -188,7 +240,7 @@ export default function Register() {
              </div>
            </div>
            {/* ▲▲▲ 追加8ここまで ▲▲▲ */}
-           {/* ▼▼▼ 追加9: 一口メモフォーム ▼▼▼ */}
+           {/* ▼▼▼ 追加9: 一口メモ入力フォーム ▼▼▼ */}
            <div className={styles.formGroup}>
              <label className={styles.label}>一口メモ</label>
              <textarea
@@ -203,7 +255,7 @@ export default function Register() {
            <button
              type="button" // 今回は画面遷移なしのためbutton
              className={styles.submitButton}
-             onClick={() => alert('登録処理をここに実装します')}
+             onClick={handleSubmit}
            >
              登録する
            </button>

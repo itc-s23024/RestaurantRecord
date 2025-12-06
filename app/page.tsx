@@ -30,7 +30,7 @@ export default function Home() {
   // 画面が表示された時にデータを読み込む
   useEffect(() => {
     const fetchInitialData = async () => {
-      const data = await searchFoods(''); // 全件取得
+      const data = await searchFoods('', 'すべて'); // 初期値はタグなし
       setRecords(data);
     };
     fetchInitialData();
@@ -38,9 +38,20 @@ export default function Home() {
    // 検索を実行する関数
   const handleSearch = async (query: string) => {
     setSearchQuery(query);
-    const results = await searchFoods(query);
+    // キーワードと、現在選択されているタグの両方を使って検索
+    const results = await searchFoods(query, activeTag);
     setRecords(results);
   };
+
+  //タグ絞り込み関連
+  // ▼▼▼ 追加: タグを選択した時の処理 ▼▼▼
+   const handleTagSelect = async (tag: string) => {
+     setActiveTag(tag); // 見た目の選択状態を更新
+     // 現在の検索キーワードと、新しく選んだタグで検索
+     const results = await searchFoods(searchQuery, tag);
+     setRecords(results);
+   };
+   // ▲▲▲ 追加ここまで ▲▲▲　タグ絞り込み関連
 
   // エンターキーで検索するためのハンドラ
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -104,7 +115,7 @@ export default function Home() {
           {tags.map((tag) => (
             <button
               key={tag}
-              onClick={() => setActiveTag(tag)}
+              onClick={() => handleTagSelect(tag)} // ★ここを新しい関数に変更
               className={`${styles.tagButton} ${
                 activeTag === tag ? styles.tagActive : styles.tagInactive
               }`}
