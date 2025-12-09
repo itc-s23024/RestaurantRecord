@@ -97,3 +97,43 @@ if (keyword && keyword.trim() !== '') {
 
 // ▲▲▲ 追加ここまで ▲▲▲
 //ここまでSupabaseのデータ登録
+
+//ここからタグの機能
+// -----------------------------
+// Supabase に存在するタグ一覧を取得
+// -----------------------------
+export async function getAllTags() {
+  const { data, error } = await supabase
+    .from("food_records")
+    .select("tags");
+
+  if (error) {
+    console.error("タグ取得エラー:", error);
+    return [];
+  }
+
+  const allTags = data.flatMap((row) => row.tags ?? []);
+  return Array.from(new Set(allTags));
+}
+
+// -----------------------------
+// タグだけで検索（単一タグ）
+// -----------------------------
+export async function searchByTag(tag: string) {
+  if (!tag || tag === "すべて") return [];
+
+  const { data, error } = await supabase
+    .from("food_records")
+    .select("*")
+    .contains("tags", [tag])
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error("タグ検索エラー:", error);
+    return [];
+  }
+
+  return data;
+}
+//ここまでタグの機能
+

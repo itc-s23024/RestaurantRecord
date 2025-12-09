@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'; //  追加(タグ・フィルター
 import styles from './page.module.css';
 import { Search, Filter, Star, Plus } from 'lucide-react'; //   Filterを追加  Starを追加 Plusアイコンを追加
 import Link from 'next/link'; //画面遷移
-import { searchFoods } from './server-actions'; // ★サーバーアクションをインポート
+import { searchFoods, getAllTags } from './server-actions'; // ★サーバーアクションをインポート
 
 // ★ Supabase の food_records に合わせた型定義
 type FoodRecord = {
@@ -20,8 +20,7 @@ type FoodRecord = {
 };
 
 export default function Home() {
-  // 表示確認用のダミーデータ（データ連携はせず配列で用意）
-  const tags = ['すべて', 'イタリアン', 'スパゲティ', 'サイゼリヤ', '和食', 'うなぎ'];
+  const [tags, setTags] = useState<string[]>(['すべて']);
   // 選択中のタグを管理するState
   const [activeTag, setActiveTag] = useState('すべて');
 
@@ -32,8 +31,15 @@ export default function Home() {
   // 画面が表示された時にデータを読み込む
   useEffect(() => {
     const fetchInitialData = async () => {
+      // 初期データを読み込む
       const data = await searchFoods('', 'すべて'); // 初期値はタグなし
       setRecords(data);
+
+      // Supabaseのタグ一覧を読み込み
+    const fetchedTags = await getAllTags();
+
+    // 「すべて」を先頭にしてセット
+    setTags(['すべて', ...fetchedTags]);
     };
     fetchInitialData();
   }, []);
