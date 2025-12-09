@@ -6,16 +6,17 @@ import { Search, Filter, Star, Plus } from 'lucide-react'; //   Filterを追加 
 import Link from 'next/link'; //画面遷移
 import { searchFoods } from './server-actions'; // ★サーバーアクションをインポート
 
-// 型定義（TypeScriptのエラー防止のため）
+// ★ Supabase の food_records に合わせた型定義
 type FoodRecord = {
   id: number;
-  image: string;
-  name: string;
+  title: string;
+  restaurant: string | null;
+  count: number;
+  date: string;
   tags: string[];
   rating: number;
-  comment: string;
-  date: string;
-  count: number;
+  memo: string;
+  image_url: string | null;
 };
 
 export default function Home() {
@@ -27,6 +28,7 @@ export default function Home() {
   // ▼▼▼ 変更: データはstateで管理し、初期値は空配列にする ▼▼▼
   const [records, setRecords] = useState<FoodRecord[]>([]);
   const [searchQuery, setSearchQuery] = useState(''); // 検索キーワード用
+
   // 画面が表示された時にデータを読み込む
   useEffect(() => {
     const fetchInitialData = async () => {
@@ -35,6 +37,7 @@ export default function Home() {
     };
     fetchInitialData();
   }, []);
+
    // 検索を実行する関数
   const handleSearch = async (query: string) => {
     setSearchQuery(query);
@@ -144,11 +147,16 @@ export default function Home() {
             {/* 上部：画像プレースホルダー */}
             <div className={styles.cardImageArea}>
               {/* ここに将来的に <img /> が入ります */}
+              {record.image_url ? (
+                <img src={record.image_url} className={styles.cardImage} />
+              ) : (
+                <div className={styles.noImage}>No Image</div>
+              )}
             </div>
 
             {/* 下部：詳細情報 */}
             <div className={styles.cardBody}>
-              <h2 className={styles.cardTitle}>{record.name}</h2>
+              <h2 className={styles.cardTitle}>{record.title}</h2>
 
               {/* カード内のタグリスト */}
               <div className={styles.cardTags}>
@@ -165,7 +173,7 @@ export default function Home() {
 
             {/* コメントエリア（グレー背景） */}
             <div className={styles.cardComment}>
-              {record.comment.split('\n').map((line, i) => (
+              {record.memo.split('\n').map((line, i) => (
                 <p key={i} className={styles.commentLine}>{line}</p>
               ))}
             </div>

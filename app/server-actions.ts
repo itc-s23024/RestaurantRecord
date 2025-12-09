@@ -49,60 +49,19 @@ export async function addFoodRecord(formData: {
   }
 }
 
-
-//カードリストのダミーデータ
-// 本来はデータベースですが、今回はここにデータを定義します
-const foodRecordsData = [
-  {
-    id: 1,
-    image: '',
-    name: 'スパゲティ',
-    tags: ['イタリアン', 'スパゲティ', 'サイゼリヤ'],
-    rating: 4,
-    comment: 'とても美味しかった',
-    date: '2024/01/01',
-    count: 3,
-  },
-  {
-    id: 2,
-    image: '',
-    name: '鰻重',
-    tags: ['和食', 'うなぎ'],
-    rating: 3,
-    comment: 'とても美味しかった\n店が少し汚かった',
-    date: '2024/01/05',
-    count: 1,
-  },
-  {
-    id: 3,
-    image: '',
-    name: 'ハンバーガー',
-    tags: ['アメリカン', 'ファストフード'],
-    rating: 5,
-    comment: '肉汁がすごかった',
-    date: '2024/01/10',
-    count: 5,
-  },
-  {
-    id: 4,
-    image: '',
-    name: '醤油ラーメン',
-    tags: ['ラーメン', '中華'],
-    rating: 4,
-    comment: 'さっぱりしていて食べやすい',
-    date: '2024/01/15',
-    count: 10,
-  },
-];
-
+// -----------------------------
+// Supabase から検索して返す関数
+// -----------------------------
 //検索窓の検索機能
 // 検索を行うサーバーアクション
 export async function searchFoods(keyword: string, tag: string = 'すべて') {  // ★ tag引数を追加（デフォルトは'すべて'）
   // サーバー側での処理の遅延をシミュレート（一瞬で終わると実感が湧かないため）
   // await new Promise((resolve) => setTimeout(resolve, 300));
 
-  // まず全データを用意
-  let filtered = foodRecordsData;
+  let query = supabase
+    .from("food_records")
+    .select("*")
+    .order("created_at", { ascending: false });
 
   // ★ keyword を小文字化
   const lowerKeyword = keyword?.toLowerCase() ?? '';
@@ -110,22 +69,29 @@ export async function searchFoods(keyword: string, tag: string = 'すべて') { 
 
   // キーワードでフィルタリング（店名やタグに含まれるか）
 if (keyword && keyword.trim() !== '') {
-  filtered = filtered.filter((record) => {
-    return (
-      record.name.toLowerCase().includes(lowerKeyword) ||
-      record.comment.toLowerCase().includes(lowerKeyword) ||
-      record.tags.some(tag => tag.toLowerCase().includes(lowerKeyword))
+  query = query.or(
+      `
+      title.ilike.%${keyword}%,
+      restaurant.ilike.%${keyword}%,
+      memo.ilike.%${keyword}%
+      `
     );
-  });
 }
 
 // ▼▼▼ 追加: タグでフィルタリング ▼▼▼
    if (tag !== 'すべて') {
-     filtered = filtered.filter((record) => record.tags.includes(tag));
+     query = query.contains("tags", [tag]);
    }
+
+   const { data, error } = await query;
+
+  if (error) {
+    console.error("検索エラー:", error);
+    return [];
+  }
    // ▲▲▲ 追加ここまで ▲▲▲
 
-  return filtered;
+  return data;
 }
 //ここまで検索窓の検索機能
 
