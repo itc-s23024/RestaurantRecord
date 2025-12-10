@@ -273,6 +273,7 @@ export default function Register() {
            <button
              type="button" // 今回は画面遷移なしのためbutton
              className={styles.submitButton}
+             onClick={handleSubmit}
            >
              登録する
            </button>
