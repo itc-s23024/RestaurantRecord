@@ -1,25 +1,34 @@
 
 'use client';
 
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import Link from 'next/link';
 // ピンアイコン、矢印、編集ペン をインポート
 import { ArrowLeft, Pencil, MapPin, Calendar, Star, ExternalLink, Trash2 } from 'lucide-react';  // Calendarを追加 Starを追加 ExternalLinkを追加 Trash2を追加
 import styles from '../../page.module.css';
+import { getFoodRecordById } from '../../server-actions';   //サーバーアクションをimport
 
 export default function ViewPage({ params }: { params: { id: string } }) {
-  // 表示確認用のダミーデータ
-  const data = {
-    title: 'スパゲティ',
-    restaurant: 'サイゼリヤ',
-    date: '2024/01/01',
-    count: 3,
-    imageUrl: '/dummy.jpg', // 適切な画像パスに変更してください
-    tags: ['イタリアン', 'スパゲティ', 'サイゼリヤ'], // ★タグデータを追加 追加12
-    rating: 4, // ★評価データを追加（1〜5）追加13
-    memo: 'とても美味しかった。\n店員さんの対応も良くて、また行きたいと思いました。', // ★メモデータを追加 追加14
-    address: '東京都千代田区丸の内1丁目', // ★住所データを追加
-  };
+  const [data, setData] = useState<any | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  //  id で Supabase からデータを取得
+  useEffect(() => {
+    const fetchData = async () => {
+      const record = await getFoodRecordById(params.id);
+      setData(record);
+      setLoading(false);
+    };
+    fetchData();
+  }, [params.id]);
+
+  if (loading) {
+    return <p className={styles.loadingText}>読み込み中...</p>;
+  }
+
+  if (!data) {
+    return <p className={styles.errorText}>データが存在しません。</p>;
+  }
 
   return (
     <main className={styles.main}>
@@ -32,7 +41,7 @@ export default function ViewPage({ params }: { params: { id: string } }) {
           {/* ヘッダー内のタイトルは詳細画面では「詳細」などの固定文字にするか、空でもOK */}
           <h1 className={styles.pageTitle}>詳細</h1>
           {/* ▼▼▼ 追加: レイアウト調整用の空要素（タイトルを中央に保つため） ▼▼▼ */}
-+           <div style={{ width: 32 }}></div>
+           <div style={{ width: 32 }}></div>
         </div>
       </header>
 
@@ -44,7 +53,7 @@ export default function ViewPage({ params }: { params: { id: string } }) {
 
         {/* 2. 画像 */}
         <img 
-          src={data.imageUrl} 
+          src={data.image_url} 
           alt={data.title} 
           className={styles.viewImage}
         />
@@ -76,7 +85,7 @@ export default function ViewPage({ params }: { params: { id: string } }) {
 
         {/* ▼▼▼ 追加12: タグリストの表示 ▼▼▼ */}
          <div className={styles.viewTagList}>
-           {data.tags.map((tag, index) => (
+           {(data.tags ?? []).map((tag: string, index: number) => (
              <span key={index} className={styles.viewTagItem}>
                {tag}
              </span>
@@ -128,7 +137,7 @@ export default function ViewPage({ params }: { params: { id: string } }) {
 
              {/* 右：Google Mapボタン */}
              <a 
-               href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(data.address)}`} 
+               href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(data.address || '')}`} 
                target="_blank" 
                rel="noopener noreferrer"
                className={styles.googleMapButton}

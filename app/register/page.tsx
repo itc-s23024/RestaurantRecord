@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { ArrowLeft, Camera, X, Star } from 'lucide-react'; // 矢印アイコン Cameraアイコンを追加 X(削除アイコン)を追加 Starを追加
 import styles from '../page.module.css';   // ★一つ上の階層のCSSファイルを読み込む
 // ★★★ 追加: server action を読み込む ★★★
-import { addFoodRecord } from '../server-actions';
+import { addFoodRecord, uploadImageToStorage } from '../server-actions';
 // ★★★ 追加: 画面遷移用の Router ★★★
 import { useRouter } from 'next/navigation';
 
@@ -33,6 +33,10 @@ export default function Register() {
     new Date().toISOString().split('T')[0]
   );
 
+  // 画像ファイル本体を保存する
+  const [imageFile, setImageFile] = useState<File | null>(null);
+
+
    // Enterキーが押された時の処理
    // ------- タグ処理 -------
    const handleTagKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -58,6 +62,7 @@ export default function Register() {
      const file = e.target.files?.[0];
      if (file) {
        // ファイルをブラウザ表示用のURLに変換してプレビュー表示
+       setImageFile(file); // ←★ 追加：ファイル本体を保存
        const url = URL.createObjectURL(file);
        setPreviewUrl(url);
      }
@@ -69,16 +74,31 @@ export default function Register() {
   // ----------------------------------------------------------
   const handleSubmit = async () => {
     try {
+      let uploadedImageUrl: string | null = null;
+
+      // ★★★ 画像がある場合 → Supabase Storage にアップロード ★★★
+    if (imageFile) {
+      const ext = imageFile.name.split('.').pop();
+      const fileName = `${crypto.randomUUID()}.${ext}`;
+      const filePath = `image_photo/${fileName}`;
+
+      // server-action に画像ファイルを送るのではなく
+      // fetch で /api/upload-image に送る方式もあるが
+      // 今回は server-actions.ts で直接アップロードする方法にします
+
+      // ---- サーバーアクションを使ってアップロード ----
+      uploadedImageUrl = await uploadImageToStorage(imageFile, filePath);
+    }
       // Supabase に送るデータを作成（画像は除外）
       await addFoodRecord({
-  title: title,
-  restaurant: shopName,
-  count: visitCount,
-  date: date,
-  tags: tags,
-  rating: rating,
-  memo: memo,
-  imageUrl: null,
+        title: title,
+        restaurant: shopName,
+        count: visitCount,
+        date: date,
+        tags: tags,
+        rating: rating,
+        memo: memo,
+        imageUrl: uploadedImageUrl,
 });
 
       // 登録完了 → ホームへ戻る
@@ -139,7 +159,6 @@ export default function Register() {
             <label className={styles.label}>訪問回数</label>
             <input 
               type="number" 
-              defaultValue={1} // 初期値を1に設定
               className={styles.inputField}
               value={visitCount}
               onChange={(e) => setVisitCount(Number(e.target.value))}
@@ -152,7 +171,6 @@ export default function Register() {
             <input 
               type="date" 
               // 今日の日付を初期値にする例（必要に応じて調整）
-              defaultValue={new Date().toISOString().split('T')[0]} 
               className={styles.inputField}
               value={date}
               onChange={(e) => setDate(e.target.value)}
@@ -255,7 +273,6 @@ export default function Register() {
            <button
              type="button" // 今回は画面遷移なしのためbutton
              className={styles.submitButton}
-             onClick={handleSubmit}
            >
              登録する
            </button>

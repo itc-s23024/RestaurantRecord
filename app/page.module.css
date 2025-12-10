@@ -811,3 +811,104 @@
   background-color: #ef4444;
 }
   /* ▲▲▲ 追加16ここまで ▲▲▲ */
+
+
+/*ここからedit画面*/
+/* ---------------------------
+   Edit page 互換クラス（追加）
+   - コンポーネント側で使っている class 名を補完します
+   --------------------------- */
+
+/* 新しい input のエイリアス（.input -> .inputField と同等に動く） */
+.input {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 16px;
+  border: 2px solid #000;
+  border-radius: 2px;
+  outline: none;
+  background-color: #fff;
+  box-sizing: border-box;
+  color: #000;
+}
+
+/* textarea エイリアス（.textarea -> .textArea と同等） */
+.textarea {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  border: 2px solid #000;
+  border-radius: 2px;
+  outline: none;
+  background-color: #fff;
+  box-sizing: border-box;
+  min-height: 120px;
+  resize: vertical;
+  font-family: inherit;
+}
+
+/* starRow（編集画面で星を横並びにしている領域） */
+.starRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0 16px 0;
+}
+
+/* previewWrapper（画像プレビューを丸めて表示、削除ボタンを重ねる） */
+.previewWrapper {
+  position: relative;
+  width: 100%;
+  max-height: 300px;
+  overflow: hidden;
+  border: 2px solid #000;
+  border-radius: 4px;
+  margin-bottom: 12px;
+  background-color: #f9fafb;
+}
+
+/* 画像プレビューは既に .previewImage があるけれど、念のため指定 */
+.previewWrapper .previewImage {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  display: block;
+}
+
+/* 削除ボタン（画像の右上に小さく出す想定） */
+.removeImageButton {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(255,255,255,0.9);
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+/* .starButton は既にある想定だが無ければ微修正 */
+.starButton {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: transform 0.1s;
+  display: flex;
+}
+.starButton:active { transform: scale(1.2); }
+
+/* 画像URLの input が .input を使っているなら placeholder 色を合わせる */
+.input::placeholder { color: #d1d5db; }
+.textarea::placeholder { color: #d1d5db; }
+
+/* フォームラベルは既存の .label を使っている想定（無ければ下記を有効化） */
+.label { display: block; font-size: 18px; font-weight: bold; color: #000; margin-bottom: 8px; }
+
+/* 送信ボタンは既に .submitButton 定義あり（上書き不要） */
+/*ここまでedit画面*/
+
