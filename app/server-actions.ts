@@ -219,42 +219,28 @@ export async function updateFoodRecord(id: string, formData: UpdateFoodRecordInp
 
 //ここから画像のSupabase保存
 // ---------- 画像アップロード用 ----------
-export async function uploadImageToStorage(file: File, filePath: string) {
- try {
-    // ① File → Buffer 化
-    const arrayBuffer = await file.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
+export async function uploadImageToStorage(file: File) {
+  // 画像アップロード用関数
+  const fileExt =file.name.split('.').pop();
+  const fileName = `${crypto.randomUUID()}.${fileExt}`;
+  const filePath = `image_photo/${fileName}`;
 
-    // ② Storage にアップロード
-    const { error: uploadError } = await supabase.storage
-      .from("image_photo") // ← バケット名
-      .upload(filePath, buffer, {
-        contentType: file.type,
-        upsert: false, // 既存ファイルがあるとエラー → 安全
-      });
+  const { error } = await supabase.storage
+  .from('image_photo') // ← Storageのバケット名
+  .upload(filePath, file, {
+    cacheControl: '3600',
+    upsert: false,
+  });
 
-    if (uploadError) {
-      console.error("画像アップロードエラー:", uploadError);
-      throw new Error("Supabase Storage に画像をアップロードできませんでした。");
-    }
-
-    // ③ 公開URLを取得（Public バケット前提）
-    const { data: publicUrlData } = supabase.storage
-      .from("image_photo")
-      .getPublicUrl(filePath);
-
-    if (!publicUrlData?.publicUrl) {
-      throw new Error("画像の公開URLを取得できませんでした。");
-    }
-
-    console.log("uploadImageToStorage success:", publicUrlData.publicUrl);
-
-    // ④ URL を返す
-    return publicUrlData.publicUrl;
-
-  } catch (err) {
-    console.error("uploadImageToStorage 例外:", err);
-    throw err;
+  if (error) {
+    throw new Error('画像アップロード失敗');
   }
+
+  // 公開URLを取得
+  const { data } = supabase.storage
+  .from('image_photo')
+  .getPublicUrl(filePath);
+
+  return data.publicUrl;
 }
 //ここまで画像のSupabase保存

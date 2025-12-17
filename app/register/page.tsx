@@ -14,8 +14,11 @@ export default function Register() {
 
   const router = useRouter(); // ← 追加
 
+  // 画像ファイル本体を保存する
+  const [imageFile, setImageFile] = useState<File | null>(null); //画像関係
+
   // ▼▼▼ 追加6: 画像プレビュー用のロジック ▼▼▼
-   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+   const [previewUrl, setPreviewUrl] = useState<string | null>(null); //画像関係
 
    // ▼▼▼ 追加7: タグ管理用のステートとロジック ▼▼▼
    const [tags, setTags] = useState<string[]>([]); // 追加されたタグのリスト
@@ -32,10 +35,6 @@ export default function Register() {
   const [date, setDate] = useState(
     new Date().toISOString().split('T')[0]
   );
-
-  // 画像ファイル本体を保存する
-  const [imageFile, setImageFile] = useState<File | null>(null);
-
 
    // Enterキーが押された時の処理
    // ------- タグ処理 -------
@@ -74,20 +73,13 @@ export default function Register() {
   // ----------------------------------------------------------
   const handleSubmit = async () => {
     try {
-      let uploadedImageUrl: string | null = null;
+      let imageUrl: string | null = null;
 
+      // 画像関係
       // ★★★ 画像がある場合 → Supabase Storage にアップロード ★★★
     if (imageFile) {
-      const ext = imageFile.name.split('.').pop();
-      const fileName = `${crypto.randomUUID()}.${ext}`;
-      const filePath = `image_photo/${fileName}`;
-
-      // server-action に画像ファイルを送るのではなく
-      // fetch で /api/upload-image に送る方式もあるが
-      // 今回は server-actions.ts で直接アップロードする方法にします
-
       // ---- サーバーアクションを使ってアップロード ----
-      uploadedImageUrl = await uploadImageToStorage(imageFile, filePath);
+      imageUrl = await uploadImageToStorage(imageFile);
     }
       // Supabase に送るデータを作成（画像は除外）
       await addFoodRecord({
@@ -98,8 +90,9 @@ export default function Register() {
         tags: tags,
         rating: rating,
         memo: memo,
-        imageUrl: uploadedImageUrl,
+        imageUrl: imageUrl,
 });
+        // 画像関係
 
       // 登録完了 → ホームへ戻る
       router.push('/');
@@ -181,6 +174,7 @@ export default function Register() {
               <label className={styles.label}>画像</label>
               
              {/* 隠しinputと、それを操作するラベル */}
+             {/*画像関係*/}
              <input 
                type="file" 
                accept="image/*"
@@ -201,6 +195,7 @@ export default function Register() {
                  </div>
                )}
              </label>
+             {/*画像関係*/}
             </div>
             {/* ▲▲▲ 変更6ここまで ▲▲▲ */}
 
