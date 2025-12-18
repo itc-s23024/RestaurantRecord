@@ -70,11 +70,7 @@ export async function searchFoods(keyword: string, tag: string = 'すべて') { 
   // キーワードでフィルタリング（店名やタグに含まれるか）
 if (keyword && keyword.trim() !== '') {
   query = query.or(
-      `
-      title.ilike.%${keyword}%,
-      restaurant.ilike.%${keyword}%,
-      memo.ilike.%${keyword}%
-      `
+     `title.ilike.%${keyword}%,restaurant.ilike.%${keyword}%,memo.ilike.%${keyword}%`
     );
 }
 
