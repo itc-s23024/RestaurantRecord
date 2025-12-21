@@ -240,3 +240,17 @@ export async function uploadImageToStorage(file: File) {
   return data.publicUrl;
 }
 //ここまで画像のSupabase保存
+
+// ここからデータ削除
+export async function deleteFoodRecord(id: string) {
+  const { error } = await supabase
+    .from('food_records') // ← テーブル名（あなたの環境に合わせて）
+    .delete()
+    .eq('id', id);
+
+  if (error) {
+    console.error('削除エラー:', error);
+    throw new Error('削除に失敗しました');
+  }
+}
+//ここまでデータ削除

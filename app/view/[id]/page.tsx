@@ -4,13 +4,17 @@
 import React, {useEffect, useState} from 'react';
 import Link from 'next/link';
 // ピンアイコン、矢印、編集ペン をインポート
-import { ArrowLeft, Pencil, MapPin, Calendar, Star, ExternalLink, Trash2 } from 'lucide-react';  // Calendarを追加 Starを追加 ExternalLinkを追加 Trash2を追加
+import { ArrowLeft, Pencil, Calendar, Star, Trash2 } from 'lucide-react';  // Calendarを追加 Starを追加 ExternalLinkを追加 Trash2を追加
 import styles from '../../page.module.css';
-import { getFoodRecordById } from '../../server-actions';   //サーバーアクションをimport
+import { useRouter } from 'next/navigation'; // 削除機能の部分
+import { getFoodRecordById, deleteFoodRecord } from '../../server-actions';   //サーバーアクションをimport // 削除機能の部分
 
 export default function ViewPage({ params }: { params: { id: string } }) {
   const [data, setData] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
+
+  // 削除機能の部分
+  const router = useRouter();
 
   //  id で Supabase からデータを取得
   useEffect(() => {
@@ -29,6 +33,20 @@ export default function ViewPage({ params }: { params: { id: string } }) {
   if (!data) {
     return <p className={styles.errorText}>データが存在しません。</p>;
   }
+  
+  // 削除機能
+  const handleDelete = async () => {
+  const confirmDelete = confirm('この記録を削除しますか？');
+
+    if (!confirmDelete) return;
+
+    try {
+      await deleteFoodRecord(params.id);
+      router.push('/'); // Homeへ戻る
+    } catch (error) {
+      alert('削除に失敗しました');
+    }
+  };
 
   return (
     <main className={styles.main}>
@@ -60,7 +78,6 @@ export default function ViewPage({ params }: { params: { id: string } }) {
 
         {/* 3. 飲食店名 */}
         <div className={styles.viewRestaurant}>
-          <MapPin size={20} />
           <span>{data.restaurant}</span>
         </div>
 
@@ -119,48 +136,6 @@ export default function ViewPage({ params }: { params: { id: string } }) {
          </div>
          {/* ▲▲▲ 追加14ここまで ▲▲▲ */}
 
-         {/* ▼▼▼ 追加15: 区切り線 ▼▼▼ */}
-         <hr className={styles.separator} style={{ marginTop: '24px' }} />
-         
-         {/* ▼▼▼ 追加15: 店の場所セクション ▼▼▼ */}
-         {/* ▼▼▼ 修正: 店の場所（地図とボタン） ▼▼▼ */}
-        <div className={styles.locationSection}>
-           
-           {/* 1. 上段：住所とボタンの横並び */}
-           <div className={styles.locationHeader}>
-             
-             {/* 左：住所 (アイコン + 文字) */}
-             <div className={styles.viewAddress}>
-               <MapPin size={20} color="#000" />
-               <span>場所</span>
-             </div>
-
-             {/* 右：Google Mapボタン */}
-             <a 
-               href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(data.address || '')}`} 
-               target="_blank" 
-               rel="noopener noreferrer"
-               className={styles.googleMapButton}
-             >
-               <ExternalLink size={14} />
-               <span>Google Mapを開く</span>
-             </a>
-           </div>
-
-           {/* 2. 下段：地図 (枠線なし) */}
-           <div className={styles.mapContainer}>
-             <iframe
-               className={styles.mapFrame}
-               title="map"
-               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3240.828030589146!2d139.7645492762319!3d35.68123617258707!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x60188bfbd89f7007%3A0x277c49ba34ed38!2z5p2x5Lqs6aeF!5e0!3m2!1sja!2sjp!4v1700000000000!5m2!1sja!2sjp"
-               loading="lazy"
-             ></iframe>
-           </div>
-
-         </div>
-          {/* ▲▲▲ 修正ここまで ▲▲▲ */}
-         {/* ▲▲▲ 追加15ここまで ▲▲▲ */}
-
          {/* ▼▼▼ 追加16: 区切り線 ▼▼▼ */}
          <hr className={styles.separator} style={{ marginTop: '24px' }} />
          {/* ▼▼▼ 追加16: 編集・削除ボタンエリア（一番下） ▼▼▼ */}
@@ -179,7 +154,7 @@ export default function ViewPage({ params }: { params: { id: string } }) {
            <button 
              type="button"
              className={`${styles.actionButton} ${styles.deleteAction}`}
-             onClick={() => alert('削除確認ダイアログを表示します')}
+             onClick={handleDelete}
            >
              <Trash2 size={20} />
              <span>削除</span>
