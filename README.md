@@ -1,36 +1,66 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# ごちノート（飲食店料理記録アプリ）
 
-## Getting Started
+## 概要
+RestaurantRecord は、飲食店で食べた「料理」を記録・管理するための Web アプリケーションです。  
+料理名、店舗名、評価、メモ、画像を登録することで、食事の記録を簡単に振り返ることができます。
 
-First, run the development server:
+本アプリは卒業制作として、フロントエンドからバックエンドまで一貫して個人で開発しました。
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 使用技術
+- Next.js（App Router）
+- TypeScript
+- Supabase（Database / Storage / Server Actions）
+- CSS Modules
+- Vercel（デプロイ）
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## 操作説明
 
-## Learn More
+### 1. トップページ
+アプリを起動すると、登録済みの料理一覧が表示されます。  
+料理は登録日時の新しい順に並びます。
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 2. 料理の登録
+画面右上の「＋」ボタンをクリックすると、料理登録画面に遷移します。  
+以下の情報を入力して登録できます。
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+- 料理名
+- 店舗名
+- 評価（★）
+- メモ
+- 料理画像
 
-## Deploy on Vercel
+登録した情報は Supabase に保存され、一覧画面に反映されます。
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+### 3. 検索・絞り込み
+検索欄にキーワードを入力すると、  
+料理名・店舗名・メモを対象に検索できます。
+
+また、タグを選択することで条件に合った料理のみを表示できます。
+
+---
+
+### 4. 詳細表示
+一覧から料理を選択すると、詳細画面が表示されます。  
+登録した画像やメモを確認することができます。
+
+---
+
+## 工夫した点
+- Server Actions を用いて安全にデータ処理を行っている点
+- 料理画像を Supabase Storage に保存し、URL で管理している点
+- シンプルで直感的な操作を意識した UI 設計
+
+---
+
+## 制作情報
+- 制作期間：〇ヶ月
+- 制作形態：個人制作
+- 制作目的：Web アプリケーション開発の一連の流れを理解するため
