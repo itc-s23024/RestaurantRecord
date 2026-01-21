@@ -13,7 +13,7 @@
 - TypeScript
 - Supabase（Database / Storage / Server Actions）
 - CSS Modules
-- Vercel（デプロイ）
+- Vercel（デプロイ）　[リンク] ( https://vercel.com/ryuukumatas-projects/restaurant-record2 ) 
 
 ---
 
